@@ -1,0 +1,7 @@
+frames/
+audio/
+*.mp4
+.git
+.DS_Store
+Thumbs.db
+work.jpg
