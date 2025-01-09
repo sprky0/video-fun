@@ -35,7 +35,9 @@ foreach ($frames as $frame) {
 	echo "\n";
 
 	imagepng($image, $frame);
-
 	imagedestroy($image);
+
 }
 
+if (is_file($tmp))
+	unlink($tmp);

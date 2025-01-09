@@ -28,7 +28,7 @@ input_video="$1"
 timestamp=$(date +%Y%m%d%H%M%S)
 basename=$(basename "$input_video")
 filename="${basename%.*}"
-output_video="${filename}.processed.${timestamp}.mp4"
+output_video="output/${filename}.processed.${timestamp}.mp4"
 
 # Create necessary directories
 mkdir -p src/frames
@@ -51,12 +51,16 @@ echo "Input video: $input_video"
 echo "Frames extracted to: ./frames/"
 echo "Audio tracks extracted to: ./audio/"
 echo "----------------------------------------"
-echo "PROCESSING PLACEHOLDER"
+echo "PROCESSING FRAMES..."
 # echo "This is where you would add your frame processing logic"
 # echo "Process all PNG files in ./frames/ directory"
-# 
 
-php filter.php
+# Run the filter script(s)
+php filter.php $timestamp
+
+
+
+
 echo "----------------------------------------"
 echo "Processing complete!"
 echo "----------------------------------------"
@@ -70,6 +74,8 @@ ffmpeg -r "$framerate" -i "src/frames/frame_${timestamp}_%08d.png" -i "src/audio
 
 echo "Video processing complete!"
 echo "Output saved as: $output_video"
+
+open -R "$output_video"
 
 # Optional cleanup
 # rm -r frames audio
