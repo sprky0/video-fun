@@ -1,8 +1,12 @@
 <?php
 
+// get the first cli argument as the expected timestamp in the naming convention
+$timestamp = $argv[1];
+
 // For each frames in frames/*.png .... 
-$frames = glob('frames/*.png');
+$frames = glob("src/frames/frame_{$timestamp}*.png");
 foreach ($frames as $frame) {
+
 	echo "Applying filter to $frame\n";
 	// ... apply the filter to the frame
 	$image = imagecreatefrompng($frame);
@@ -13,10 +17,13 @@ foreach ($frames as $frame) {
 	// write to a temp file as a jpeg at 50 quality
 	$tmp = "work.jpg";
 
+	$low = rand(1,100);
+	$high = rand($low,100);
+
 	echo "Processing $frame";
 	// Be silly many times
 	for($i = 0; $i < 100; $i++) {
-		imagejpeg($image, $tmp, rand(2,100));
+		imagejpeg($image, $tmp, rand($low,$high));
 		// read it back in and save as a png
 		$image = imagecreatefromjpeg($tmp);
 		// write it to a temp file as a jpeg at 98 quality
@@ -28,7 +35,6 @@ foreach ($frames as $frame) {
 	echo "\n";
 
 	imagepng($image, $frame);
-	// imagefilter($image, IMG_FILTER_GRAYSCALE);
 
 	imagedestroy($image);
 }

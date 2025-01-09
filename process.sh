@@ -31,18 +31,19 @@ filename="${basename%.*}"
 output_video="${filename}.processed.${timestamp}.mp4"
 
 # Create necessary directories
-mkdir -p frames
-mkdir -p audio
+mkdir -p src/frames
+mkdir -p src/audio
+mkdir -p output
 
 # Get video framerate
 framerate=$(ffprobe -v error -select_streams v -of default=noprint_wrappers=1:nokey=1 -show_entries stream=r_frame_rate "$input_video" | bc -l)
 echo "Detected framerate: $framerate fps"
 
 # Extract audio (all streams)
-ffmpeg -i "$input_video" -vn -acodec copy "audio/audio_track_${timestamp}.aac" 2>/dev/null
+ffmpeg -i "$input_video" -vn -acodec copy "src/audio/audio_track_${timestamp}.aac" 2>/dev/null
 
 # Extract frames as PNG
-ffmpeg -i "$input_video" -vsync 0 "frames/frame_${timestamp}_%08d.png"
+ffmpeg -i "$input_video" -vsync 0 "src/frames/frame_${timestamp}_%08d.png"
 
 echo "Video processing preparation complete!"
 echo "----------------------------------------"
@@ -61,7 +62,7 @@ echo "Processing complete!"
 echo "----------------------------------------"
 # Reconstruct video with processed frames
 # Note: Adjust -r parameter to match original framerate
-ffmpeg -r "$framerate" -i "frames/frame_${timestamp}_%08d.png" -i "audio/audio_track_${timestamp}.aac" \
+ffmpeg -r "$framerate" -i "src/frames/frame_${timestamp}_%08d.png" -i "src/audio/audio_track_${timestamp}.aac" \
     -c:v libx264 -pix_fmt yuv420p -preset medium -crf 23 \
     -c:a aac -b:a 192k \
     -movflags +faststart \
