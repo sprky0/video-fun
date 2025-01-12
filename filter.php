@@ -2,6 +2,7 @@
 
 // get the first cli argument as the expected timestamp in the naming convention
 $timestamp = $argv[1];
+$loops = $argv[2];
 
 // For each frames in frames/*.png .... 
 $frames = glob("src/frames/frame_{$timestamp}*.png");
@@ -22,7 +23,7 @@ foreach ($frames as $frame) {
 
 	echo "Processing $frame";
 	// Be silly many times
-	for($i = 0; $i < 100; $i++) {
+	for($i = 0; $i < $loops; $i++) {
 		imagejpeg($image, $tmp, rand($low,$high));
 		// read it back in and save as a png
 		$image = imagecreatefromjpeg($tmp);
